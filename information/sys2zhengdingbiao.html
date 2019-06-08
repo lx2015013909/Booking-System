@@ -1,0 +1,166 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="style/authority/jquery.fancybox-1.3.4.css" media="screen"></link>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="scripts/result.js"></script>
+<title>教材管理系统</title>
+<script type="text/javascript">
+	function getValue(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/chubanshe',
+			data:{},
+			success:function(data){//返回json结果 
+				var i;
+				var obj=document.getElementById("xuenian");
+				for(i=0;i<data.length;i++){
+				obj.add(new Option(""+data[i].xuenian+"",""+data[i].xuenian+""));
+				}
+			}
+		});
+	}
+	
+		$(document).ready(function() {
+		/*
+		 * 查询
+		 */
+		$("#submitbutton").click(function() {
+			if(validateForm()){
+			getlist();
+			}			
+		});
+		
+		$("#countbutton").click(function() {
+			document.getElementById("xuenian").style.display = 'none';
+			document.getElementById("zhuanyenianji").style.display = 'none';
+			document.getElementById("submitbutton").style.display = 'none';
+			document.getElementById("countbutton").style.display = 'none';
+				getall();
+			
+		});
+		
+	});
+	var j=1;
+	var count=0;
+	function getlist(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/jcyd/sys2/selectAll',
+			data:{"xuenian":document.getElementById("xuenian").value,
+				  "academy":document.getElementById("suoshuxueyuan").value},
+			success:function(data){//返回json结果 
+					var i;	
+					for(i=0;i<data.length;i++){
+					var table=document.getElementById("tab");
+					var newRow=table.insertRow();
+					var newCell1 = newRow.insertCell(0);  newCell1.innerHTML = "<td>"+j+"</td>" ; 	j++;  
+					var newCell2 = newRow.insertCell(1);  newCell2.innerHTML = "<td>"+data[i].kechengmingcheng+"</td>" ;	  	  
+					var newCell2 = newRow.insertCell(2);  newCell2.innerHTML = "<td>"+data[i].shuhao+"</td>" ;
+					var newCell2 = newRow.insertCell(3);  newCell2.innerHTML = "<td>"+data[i].jiaocaimingcheng+"</td>" ;
+					var newCell2 = newRow.insertCell(4);  newCell2.innerHTML = "<td>"+data[i].zuozhe+"</td>" ;
+					var newCell1 = newRow.insertCell(5);  newCell1.innerHTML = "<td>"+data[i].chubanshe+"</td>" ;
+					var newCell2 = newRow.insertCell(6);  newCell2.innerHTML = "<td>"+data[i].chubanshijian+"</td>" ;
+					var newCell2 = newRow.insertCell(7);  newCell2.innerHTML = "<td>"+data[i].jiaocaileibie+"</td>" ;
+					var newCell2 = newRow.insertCell(8);  newCell2.innerHTML = "<td>"+data[i].zhuanyenianji+"</td>" ;
+					var newCell2 = newRow.insertCell(9);  newCell2.innerHTML = "<td>"+data[i].xueshengshu+"</td>" ;
+					var newCell2 = newRow.insertCell(10);  newCell2.innerHTML = "<td>"+data[i].jiaoben+"</td>" ;
+					var newCell2 = newRow.insertCell(11);  newCell2.innerHTML = "<td>"+data[i].hejibenshu+"</td>" ;
+					var newCell2 = newRow.insertCell(12);
+					if(data[i].beizhu==null)
+					{
+						newCell2.innerHTML = "<td>无</td>" ;
+					}
+					else{
+						newCell2.innerHTML = "<td>"+data[i].beizhu+"</td>" ;
+					}
+					}
+					document.getElementById('submitbutton').style.display='none';
+		},
+		error:function(){
+			alert("信息有误，请确认信息后再次查询!");
+		}
+		});
+	}
+	function validateForm(){
+
+		if($("#suoshuxueyuan").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写所属学院！', ok:true,});
+			return false;
+		}
+		return true;
+	}
+</script>
+<style>
+	.alt td{ background:black !important;}
+</style>
+</head>
+<body onload="getValue() " >
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<input type="hidden" name="allIDCheck" value="" id="allIDCheck"/>
+		<input type="hidden" name="fangyuanEntity.fyXqName" value="" id="fyXqName"/>
+		<div id="container">
+			<div class="ui_content">
+				<div class="ui_text_indent">
+					<div id="box_border">
+						<div >
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<div class="ui_tb">
+					<table class="table" cellspacing="0" cellpadding="0" width="100%" align="center" border="0" id="tab">
+						<tr>
+							<th>序号</th>
+							<th>课程名称</th>
+							<th>书号</th>
+							<th>教材名称</th>
+							<th>作者</th>
+							<th>出版社</th>
+							<th>出版时间</th>
+							<th>教材类别</th>
+							<th>年级专业</th>
+							<th>学生数</th>
+							<th>教本</th>
+							<th>合计本数</th>
+							<th>备注</th>
+						</tr>
+						
+					</table>
+					<div style="text-align: center;">
+						<select name="xuenian" id="xuenian" class="ui_select01" >
+						</select>
+						<select name="suoshuxueyuan" id="suoshuxueyuan" class="ui_select01"  >
+							<option></option>
+							<option value="1">材化学院</option>
+							<option value="2" >电气学院</option>
+							<option value="3">电信学院</option>
+							<option value="4" >法学院</option>
+							<option value="5" >环旅学院</option>
+							<option value="6" >机电学院</option>
+							<option value="7" >建工学院</option>
+							<option value="8" >金数学院</option>
+							<option value="9" >经管学院</option>
+							<option value="10" >生物学院</option>
+							<option value="11" >体育学院</option>
+							<option value="12" >外国语学院</option>
+							<option value="13" >文传学院</option>
+							<option value="14" >艺术学院</option>
+							<option value="15" >马克思学院</option>
+						</select>
+						<input id="submitbutton" type="button" value="查询" class="ui_input_btn01"/>		
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</body>
+</html>

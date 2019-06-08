@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>信息管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery-1.4.4.min.js"></script>
+<script src="scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		 * 提交
+		 */
+		$("#submitbutton").click(function() {
+			if(validateForm()){
+				updateinfo();
+			}
+		});
+		
+		/*
+		 * 取消
+		 */
+		$("#cancelbutton").click(function() {
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		});
+		
+		var result = 'null';
+		if(result =='success'){
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		}
+	});
+		
+
+	/** 表单验证  **/
+	function validateForm(){
+		if($("#xueshengshu").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写学生数', ok:true,});
+			return false;
+		}
+		if($("#jiaoben").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写教本', ok:true,});
+			return false;
+		}
+		if($("#dingjia").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写书本定价', ok:true,});
+			return false;
+		}
+		return true;
+	}
+	</script>
+	<script type="text/javascript">
+		
+			function updateinfo(){
+			$.ajax({
+				type:'POST',
+				url:'http://localhost:8080/jcyd/sys2/update',
+				data:{"id":localStorage.getItem("id"),
+					  "xuenian":document.getElementById("xuenian").value,
+					  "kechengmingcheng":document.getElementById("kechengmingcheng").value,
+					  "xueshengshu":document.getElementById("xueshengshu").value,
+					  "jiaoben":document.getElementById("jiaoben").value,
+					  "hejibenshu":document.getElementById("hejibenshu").value,
+					  "flag":"4"},
+				success:function(data){//返回json结果 
+					if(data){
+						alert("提交成功!");
+						window.parent.$.fancybox.close();
+					}
+					else{
+						alert("系统出现错误，请联系管理员！");
+					}
+					}	
+				});	
+		}
+	</script>
+	<script type="text/javascript">
+		function getValue(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/jcyd/sys1/by',
+			data:{id:localStorage.getItem("id")},
+			success:function(data){//返回json结果 
+				var i;
+				var obj=document.getElementById("xuenian");
+				obj.add(new Option(""+data.xuenian+"",""+data.xuenian+""));
+				var obj=document.getElementById("kechengmingcheng");
+				obj.add(new Option(""+data.kechengmingcheng+"",""+data.kechengmingcheng+""));
+				var obj=document.getElementById("zhuanyenianji");
+				obj.add(new Option(""+data.zhuanyenianji+"",""+data.zhuanyenianji+""));
+				document.getElementById("beizhu").value=data.beizhu;
+			}	
+		});
+	}
+	</script>
+	<script type="text/javascript">
+		function count(){
+			document.getElementById("hejibenshu").value=Number(document.getElementById("xueshengshu").value)+Number(document.getElementById("jiaoben").value);
+		}
+	</script>
+
+
+</head>
+<body  onload="getValue()">
+<form id="submitForm" name="submitForm" action="#" method="post">
+	<div id="container">
+		<div id="nav_links">
+			当前位置：基础数据&nbsp;>&nbsp;<span style="color: #1A5CC6;">审核公共课教材</span>
+			<div id="page_close">
+				<a href="javascript:parent.$.fancybox.close();">
+					<img src="images/common/page_close.png" width="20" height="20" style="vertical-align: text-top;"/>
+				</a>
+			</div>
+		</div>
+		<div class="ui_content">
+			<table  cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+				<tr>
+					<td class="ui_text_rt" width="80">学年</td>
+					<td class="ui_text_lt">
+						<select name="xuenian" id="xuenian" class="ui_select01" " disabled>
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">课程名称</td>
+					<td>
+						<select name="kechengmingcheng" id="kechengmingcheng"   class="ui_select01" disabled>
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">专业年级</td>
+					<td class="ui_text_lt">
+						<select name="chubanshe" id="zhuanyenianji"   name="zhuanyenianji"  class="ui_select01" disabled>
+				        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">学生数</td>
+					<td class="ui_text_lt">
+						<input type="text" id="xueshengshu"  name="xueshengshu" class="ui_input_txt02" placeholder="必填"  onkeyup="value=value.replace(/[^\d]/g,'')"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">教本</td>
+					<td class="ui_text_lt">
+						<input type="text" id="jiaoben" name="jiaoben" placeholder="必填"  class="ui_input_txt02" onkeyup="value=value.replace(/[^\d]/g,'')" onmouseleave="count()"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">合计本数</td>
+					<td class="ui_text_lt">
+						<input type="text" id="hejibenshu" name="hejibenshu"  class="ui_input_txt02" placeholder=""     disabled/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">备注</td>
+					<td class="ui_text_lt">
+						<input type="text" id="beizhu"  name="beizhu" class="ui_input_txt03" disabled/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td class="ui_text_lt">
+						&nbsp;<input id="submitbutton" type="button" value="提交" class="ui_input_btn01"/>					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

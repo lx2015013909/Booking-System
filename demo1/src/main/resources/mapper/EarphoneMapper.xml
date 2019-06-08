@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.EarphoneMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.Earphone">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="xuenian" jdbcType="VARCHAR" property="xuenian" />
+        <result column="zhuanyenianji" jdbcType="VARCHAR" property="zhuanyenianji" />
+        <result column="danjia" jdbcType="DECIMAL" property="danjia" />
+    </resultMap>
+    <select id="selectByXuenian" resultMap="BaseResultMap">
+        select *  from earphone where  xuenian=#{xuenian} and zhuanyenianji=#{zhuanyenianji}
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        select *  from earphone where  id=#{id}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *  from earphone
+    </select>
+    <update id="updateById">
+        update   earphone set  danjia=#{danjia} where id=#{id}
+    </update>
+    <insert id="insert"  >
+        insert into earphone(xuenian,zhuanyenianji,danjia) values  (#{xuenian},#{zhuanyenianji},#{danjia})
+    </insert>
+    <delete id="deleteById">
+        DELETE FROM earphone  where id=#{id}
+    </delete>
+</mapper>

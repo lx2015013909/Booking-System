@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>信息管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery-1.4.4.min.js"></script>
+<script src="scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		 * 提交
+		 */
+		$("#submitbutton").click(function() {
+			if(validateForm()){
+			update()
+			}
+		});
+		
+		/*
+		 * 取消
+		 */
+		$("#cancelbutton").click(function() {
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		});
+		
+		var result = 'null';
+		if(result =='success'){
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		}
+	});
+		
+	</script>
+	<script type="text/javascript">
+		
+			function update(){
+			$.ajax({
+				type:'POST',
+				url:'http://localhost:8080/users/update',
+				data:{"id":localStorage.getItem('id'),
+					  "password":document.getElementById('password').value},
+				success:function(data){//返回json结果 
+					if(data){
+						alert("修改成功!");
+						location.reload();
+					}
+					else{
+						alert("修改失败");
+						location.reload();
+					}
+					}	
+				});	
+		}
+		
+	</script>
+	<script type="text/javascript">
+		function validateForm(){
+			if($("#password").val()==""){
+				art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写密码！', ok:true,});
+				return false;
+				}
+			if($("#password1").val()!=$("#password").val()){
+				art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'两次输入的密码不一致，请确认后重新输入！', ok:true,});
+				return false;
+			}
+			return true;
+		}
+	</script>
+
+
+</head>
+<body >
+<form id="submitForm" name="submitForm" action="#" method="post">
+	<div id="container">
+	
+		<div class="ui_content">
+			<table  cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+				<tr>
+					<td class="ui_text_rt" width="80">输入新密码</td>
+					<td class="ui_text_lt">
+						<input type="password" id="password" name="password"  class="ui_input_txt02"  onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')"  placeholder="请输入您修改后的密码"  />
+					</td>
+				</tr>
+
+				<tr>
+					<td class="ui_text_rt">确认密码</td>
+					<td class="ui_text_lt">
+						<input type="password" id="password1" name="password1"  class="ui_input_txt02" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')"  placeholder="再次确认"    />
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td class="ui_text_lt">
+						&nbsp;<input id="submitbutton" type="button" value="修改" class="ui_input_btn01"/>					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

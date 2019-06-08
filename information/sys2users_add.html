@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>信息管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery-1.4.4.min.js"></script>
+<script src="scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		 * 提交
+		 */
+		$("#submitbutton").click(function() {
+			if(validateForm()){
+			add();
+			}
+		});
+		
+		/*
+		 * 取消
+		 */
+		$("#cancelbutton").click(function() {
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		});
+		
+		var result = 'null';
+		if(result =='success'){
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		}
+	});
+		
+
+	/** 表单验证  **/
+	function validateForm(){
+		if($("#username").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写用户名！', ok:true,});
+			return false;
+		}
+		if($("#password").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写密码！', ok:true,});
+			return false;
+		}
+		if($("#password1").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'确认密码为空！', ok:true,});
+			return false;
+		}
+		if($("#password1").val()!=$("#password").val()){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'两次输入的密码不一致，请确认后重新输入！', ok:true,});
+			return false;
+		}
+		if($("#xingming").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写姓名！', ok:true,});
+			return false;
+		}
+		if($("#suoshuxueyuan").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写所属学院！', ok:true,});
+			return false;
+		}
+		return true;
+	}
+	</script>
+	<script type="text/javascript">
+			function add(){
+			$.ajax({
+				type:'POST',
+				url:'http://localhost:8080/users/add',
+				data:{"username":document.getElementById("username").value,
+					  "password":document.getElementById("password").value,
+					  "name":document.getElementById("xingming").value,
+					  "academy":document.getElementById("suoshuxueyuan").value,
+					  "flag":   document.getElementById("zhiwei").value},
+				success:function(data){//返回json结果 
+					if(data){
+						alert("新增成功!");
+						window.parent.$.fancybox.close();
+					}
+					else{
+						alert("存在重复记录，请勿重复添加！");
+					}
+					},
+					
+				});	
+		}
+	</script>
+	<script type="text/javascript">
+		function getzhiwei(){
+			var obj1=document.getElementById("suoshuxueyuan").value;
+			var obj=document.getElementById("zhiwei");
+			if($("#suoshuxueyuan").val()==""){
+				obj.options.length=0;
+			}
+			else if(obj1!=17)
+			{
+			obj.options.length=0;
+			obj.add(new Option("教师","1"));
+			obj.add(new Option("教研室主任","2"));
+			obj.add(new Option("教学秘书","3"));
+			}
+			else
+			{
+				obj.options.length=0;
+				obj.add(new Option("教师","1"));
+			}
+			}	
+	</script>
+</head>
+<body  >
+<form id="submitForm" name="submitForm" action="#" method="post">
+	<div id="container">
+		<div id="nav_links">
+			当前位置：我的功能&nbsp;>&nbsp;<span style="color: #1A5CC6;">新增用户</span>
+			<div id="page_close">
+				<a href="javascript:parent.$.fancybox.close();">
+					<img src="images/common/page_close.png" width="20" height="20" style="vertical-align: text-top;"/>
+				</a>
+			</div>
+		</div>
+		<div class="ui_content">
+			<table  cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+				<tr>
+					<td class="ui_text_rt" width="80">用户名</td>
+					<td class="ui_text_lt">
+						<input type="text" id="username"  name="username" class="ui_input_txt02" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')"  placeholder="请输入用户名">
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt" width="80" >密码</td>
+					<td class="ui_text_lt">
+						<input type="password" id="password"  name="password" class="ui_input_txt02" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" placeholder="请输入密码">
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt" width="80">确认密码</td>
+					<td class="ui_text_lt">
+						<input type="password" id="password1"  name="password1" class="ui_input_txt02" onkeyup="value=value.replace(/[\u4e00-\u9fa5]/ig,'')" placeholder="再次输入密码">
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt" width="80">姓名</td>
+					<td class="ui_text_lt">
+						<input type="text" id="xingming"  name="xingming" class="ui_input_txt02" >
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">所属学院</td>
+					<td class="ui_text_lt">
+						<select name="suoshuxueyuan" id="suoshuxueyuan"   onchange="getzhiwei()"  class="ui_select01">
+							<option></option>
+							<option value="1">材化学院</option>
+							<option value="2" >电气学院</option>
+							<option value="3">电信学院</option>
+							<option value="4" >法学院</option>
+							<option value="5" >环旅学院</option>
+							<option value="6" >机电学院</option>
+							<option value="7" >建工学院</option>
+							<option value="8" >金数学院</option>
+							<option value="9" >经管学院</option>
+							<option value="10" >生物学院</option>
+							<option value="11" >体育学院</option>
+							<option value="12" >外国语学院</option>
+							<option value="13" >文传学院</option>
+							<option value="14" >艺术学院</option>
+							<option value="15" >马克思学院</option>
+							<option value="16" >实训中心</option>
+							<option value="17" >教务处</option>
+				        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">职位</td>
+					<td class="ui_text_lt">
+						<select name="zhiwei" id="zhiwei"     class="ui_select01">
+							
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td class="ui_text_lt">
+						&nbsp;<input id="submitbutton" type="button" value="提交" class="ui_input_btn01"/>					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

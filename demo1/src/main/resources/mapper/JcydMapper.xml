@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.JcydMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.Jcyd">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="kechengmingcheng" jdbcType="VARCHAR" property="kechengmingcheng" />
+        <result column="xuenian" jdbcType="VARCHAR" property="xuenian" />
+        <result column="shuhao" jdbcType="VARCHAR" property="shuhao" />
+        <result column="jiaocaimingcheng" jdbcType="VARCHAR" property="jiaocaimingcheng" />
+        <result column="zuozhe" jdbcType="VARCHAR" property="zuozhe" />
+        <result column="chubanshe" jdbcType="VARCHAR" property="chubanshe" />
+        <result column="chubanshijian" jdbcType="VARCHAR" property="chubanshijian" />
+        <result column="jiaocaileibie" jdbcType="VARCHAR" property="jiaocaileibie" />
+        <result column="zhuanyenianji" jdbcType="VARCHAR" property="zhuanyenianji" />
+        <result column="xueshengshu" jdbcType="INTEGER" property="xueshengshu"></result>
+        <result column="jiaoben" jdbcType="INTEGER" property="jiaoben"></result>
+        <result column="hejibenshu" jdbcType="INTEGER" property="hejibenshu"></result>
+        <result column="dingjia" jdbcType="DECIMAL" property="dingjia"></result>
+        <result column="zhekou" jdbcType="DECIMAL" property="zhekou"></result>
+        <result column="danjia" jdbcType="DECIMAL" property="danjia"></result>
+        <result column="academy" jdbcType="INTEGER" property="academy"></result>
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="flag" jdbcType="INTEGER" property="flag"></result>
+        <result column="beizhu" jdbcType="VARCHAR" property="beizhu" />
+        <result column="shijian" jdbcType="TIMESTAMP" property="shijian" />
+    </resultMap>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *  from Jcyd where  username=#{username,jdbcType=VARCHAR }  ORDER BY id DESC
+    </select>
+    <select id="selectAllSys" resultMap="BaseResultMap">
+        select *  from Jcyd where  academy=#{academy,jdbcType=INTEGER }  ORDER BY id DESC
+    </select>
+    <select id="selectAllSys1" resultMap="BaseResultMap">
+        select *  from Jcyd where  academy=#{academy,jdbcType=INTEGER } and shuhao is not null  ORDER BY id DESC
+    </select>
+    <select id="selectSys1ById" resultMap="BaseResultMap">
+        select *  from Jcyd where  id=#{id,jdbcType=INTEGER }
+    </select>
+    <insert id="insert" >
+        insert into jcyd(xuenian,kechengmingcheng,shuhao,jiaocaimingcheng,zuozhe,chubanshe,
+        chubanshijian,jiaocaileibie,zhuanyenianji,xueshengshu,jiaoben,hejibenshu,zhekou,academy,username,flag,beizhu)
+        values (#{xuenian},#{kechengmingcheng},#{shuhao},#{jiaocaimingcheng},#{zuozhe},#{chubanshe},#{chubanshijian},#{jiaocaileibie},#{zhuanyenianji},
+        #{xueshengshu},#{jiaoben},#{hejibenshu},#{zhekou},#{academy},#{username},#{flag},#{beizhu})
+    </insert>
+    <update id="SysTongGuo">
+        update Jcyd
+        set flag=2   where id=#{id,jdbcType=INTEGER }
+    </update>
+    <update id="Sys1Update">
+        update Jcyd
+        set  xueshengshu=#{xueshengshu},jiaoben=#{jiaoben},hejibenshu=#{hejibenshu},dingjia=#{dingjia},danjia=#{danjia},flag=#{flag} where id=#{id}
+    </update>
+    <update id="SysJujue">
+        update Jcyd
+        set flag=0   where id=#{id,jdbcType=INTEGER }
+    </update>
+    <select id="selecetAllSys2" resultMap="BaseResultMap">
+        select *  from Jcyd  where  shuhao is not null and shuhao!='' order  by id  DESC
+    </select>
+    <select id="selecetAllSys2Public" resultMap="BaseResultMap">
+        select *  from Jcyd  where  shuhao = ''  order by id DESC
+    </select>
+    <update id="Sys2TongGuo">
+        update Jcyd
+        set flag=4  where id=#{id,jdbcType=INTEGER }
+    </update>
+    <update id="Sys2Jujue">
+        update Jcyd
+        set flag=0   where id=#{id,jdbcType=INTEGER }
+    </update>
+    <insert id="insertPublic" >
+        insert into jcyd(xuenian,kechengmingcheng,shuhao,jiaocaimingcheng,zuozhe,chubanshe,
+        chubanshijian,jiaocaileibie,zhuanyenianji,xueshengshu,jiaoben,hejibenshu,zhekou,academy,username,flag,beizhu)
+        values (#{xuenian},#{kechengmingcheng},#{shuhao},#{jiaocaimingcheng},#{zuozhe},#{chubanshe},#{chubanshijian},#{jiaocaileibie},#{zhuanyenianji},
+        #{xueshengshu},#{jiaoben},#{hejibenshu},#{zhekou},#{academy},#{username},#{flag},#{beizhu})
+    </insert>
+    <select id="selectByKechengmingcheng" resultMap="BaseResultMap">
+        select *  from Jcyd where  kechengmingcheng=#{kechengmingcheng} and xuenian=#{xuenian} and shuhao is not null and shuhao !='' limit 1
+    </select>
+    <update id="Sys2Update">
+        update Jcyd
+        set  shuhao=#{shuhao},jiaocaimingcheng=#{jiaocaimingcheng},zuozhe=#{zuozhe},chubanshe=#{chubanshe},chubanshijian=#{chubanshijian},
+              jiaocaileibie=#{jiaocaileibie},xueshengshu=#{xueshengshu},jiaoben=#{jiaoben},hejibenshu=#{hejibenshu},dingjia=#{dingjia},zhekou=#{zhekou},danjia=#{danjia},flag=#{flag}
+              where id=#{id}
+    </update>
+    <update id="Sys2TongGuoPublic">
+        update Jcyd
+        set  shuhao=#{shuhao},jiaocaimingcheng=#{jiaocaimingcheng},zuozhe=#{zuozhe},chubanshe=#{chubanshe},chubanshijian=#{chubanshijian},
+              jiaocaileibie=#{jiaocaileibie},dingjia=#{dingjia},zhekou=#{zhekou},danjia=#{danjia},flag=#{flag}
+              where id=#{id}
+    </update>
+    <insert id="insertPublicSpecial" >
+        insert into jcyd(xuenian,kechengmingcheng,shuhao,zhuanyenianji,xueshengshu,jiaoben,hejibenshu,academy,username,flag,beizhu)
+        values (#{xuenian},#{kechengmingcheng},#{shuhao},#{zhuanyenianji},
+        #{xueshengshu},#{jiaoben},#{hejibenshu},#{academy},#{username},#{flag},#{beizhu})
+    </insert>
+    <update id="updateByAdmin">
+        update  Jcyd set dingjia=#{dingjia},danjia=#{danjia} where  xuenian=#{xuenian} and jiaocaimingcheng=#{jiaocaimingcheng}
+    </update>
+    <select id="selectByJiaocaimingcheng" resultMap="BaseResultMap">
+        select *  from Jcyd where  jiaocaimingcheng=#{jiaocaimingcheng}  and xuenian=#{xuenian}
+    </select>
+    <select id="GetJiaocaimingcheng" resultMap="BaseResultMap">
+        select distinct * from Jcyd where  academy=#{academy} and shuhao is not null and shuhao!='' and xuenian=#{xuenian}
+    </select>
+    <select id="selectByXuenian" resultMap="BaseResultMap">
+        select *  from Jcyd where  xuenian=#{xuenian}  and zhuanyenianji=#{zhuanyenianji} and shuhao is not null  and flag=4
+    </select>
+    <select id="sys2SelectAll" resultMap="BaseResultMap">
+        select *  from Jcyd where xuenian=#{xuenian} and academy=#{academy} and shuhao is not null
+    </select>
+</mapper>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.OtherfeeMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.Otherfee">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="xuenian" jdbcType="VARCHAR" property="xuenian" />
+        <result column="zhuanyenianji" jdbcType="VARCHAR" property="zhuanyenianji" />
+        <result column="danjia" jdbcType="DECIMAL" property="danjia" />
+        <result column="beizhu" jdbcType="VARCHAR" property="beizhu" />
+    </resultMap>
+    <select id="selectByXuenian" resultMap="BaseResultMap">
+        select *  from otherfee where  xuenian=#{xuenian} and zhuanyenianji=#{zhuanyenianji}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *  from otherfee
+    </select>
+    <select id="selectById" resultMap="BaseResultMap">
+        select *  from otherfee where id=#{id}
+    </select>
+    <update id="updateById">
+        update   otherfee set  danjia=#{danjia},beizhu=#{beizhu} where id=#{id}
+    </update>
+    <insert id="insert"  >
+        insert into otherfee(xuenian,zhuanyenianji,danjia,beizhu) values  (#{xuenian},#{zhuanyenianji},#{danjia},#{beizhu})
+    </insert>
+    <delete id="deleteById">
+        DELETE FROM otherfee  where id=#{id}
+    </delete>
+</mapper>

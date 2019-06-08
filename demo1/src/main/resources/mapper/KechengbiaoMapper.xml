@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.KechengbiaoMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.Kechengbiao">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="kechengmingcheng" jdbcType="VARCHAR" property="kechengmingcheng" />
+        <result column="flag" jdbcType="INTEGER" property="flag" />
+    </resultMap>
+    <select id="selectAll" resultMap="BaseResultMap" >
+        select *  from kechengbiao where  flag=#{academy,jdbcType=INTEGER }
+    </select>
+    <select id="selectAllPublic" resultMap="BaseResultMap" >
+        select *  from kechengbiao where  flag !=#{academy,jdbcType=INTEGER }
+    </select>
+    <select id="selectByKechengmingcheng" resultMap="BaseResultMap" >
+        select *  from kechengbiao where  kechengmingcheng=#{kechengmingcheng}
+    </select>
+    <insert id="insert">
+        insert into kechengbiao(kechengmingcheng,flag) values  (#{kechengmingcheng},#{academy})
+    </insert>
+    <delete id="deleteById">
+        DELETE FROM kechengbiao  where id=#{id}
+    </delete>
+</mapper>

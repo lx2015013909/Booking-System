@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ZhuanyenianjiMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.Zhuanyenianji">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="zhuanyenianji" jdbcType="VARCHAR" property="zhuanyenianji" />
+        <result column="academy" jdbcType="INTEGER" property="academy" />
+    </resultMap>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *  from zhuanyenianji where  academy=#{academy}
+    </select>
+    <select id="selectAll1" resultMap="BaseResultMap">
+        select *  from zhuanyenianji
+    </select>
+    <select id="selectByZhuanyenianji" resultMap="BaseResultMap">
+        select *  from zhuanyenianji where zhuanyenianji=#{zhuanyenianji}
+    </select>
+    
+    <insert id="insert" >
+        insert into zhuanyenianji(zhuanyenianji,academy) values  (#{zhuanyenianji},#{academy})
+    </insert>
+    <update id="updateById">
+        update   zhuanyenianji set  zhuanyenianji=#{zhuanyenianji} where id=#{id}
+    </update>
+    <delete id="deleteById">
+        DELETE FROM zhuanyenianji  where id=#{id}
+    </delete>
+</mapper>

@@ -1,0 +1,156 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.js"></script>
+<script type="text/javascript" src="scripts/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="style/authority/jquery.fancybox-1.3.4.css" media="screen"></link>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript" src="scripts/result.js"></script>
+<title>教材管理系统</title>
+<script type="text/javascript">
+	function getValue(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/chubanshe',
+			data:{},
+			success:function(data){//返回json结果 
+				var i;
+				var obj=document.getElementById("xuenian");
+				for(i=0;i<data.length;i++){
+				obj.add(new Option(""+data[i].xuenian+"",""+data[i].xuenian+""));
+				}
+			}
+		});
+		 getZhuanyenianji();
+	}
+	
+	function getZhuanyenianji(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/zhuanyenianji/all',
+			data:{"academy":localStorage.getItem("academy")},
+			success:function(data){//返回json结果 
+				var i;
+				var obj=document.getElementById("zhuanyenianji");
+				for(i=0;i<data.length;i++){
+				obj.add(new Option(""+data[i].zhuanyenianji+"",""+data[i].zhuanyenianji+""));
+				}
+			}  
+		});
+	}
+		$(document).ready(function() {
+		/*
+		 * 查询
+		 */
+		$("#submitbutton").click(function() {
+				getlist();
+			
+		});
+		
+		$("#countbutton").click(function() {
+			document.getElementById("xuenian").style.display = 'none';
+			document.getElementById("zhuanyenianji").style.display = 'none';
+			document.getElementById("submitbutton").style.display = 'none';
+			document.getElementById("countbutton").style.display = 'none';
+				getall();
+			
+		});
+		
+	});
+	var j=1;
+	var count=0;
+	function getlist(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/jcyd/xuenian',
+			data:{"xuenian":document.getElementById("xuenian").value,
+				  "zhuanyenianji":document.getElementById("zhuanyenianji").value},
+			success:function(data){//返回json结果 
+					var i;	
+					var table=document.getElementById("tab");
+					var newRow=table.insertRow();
+					var newCell1 = newRow.insertCell(0);  newCell1.innerHTML = "<td>"+j+"</td>" ; 	j++;  
+					var newCell2 = newRow.insertCell(1);  newCell2.innerHTML = "<td>"+data.xuenian+"</td>" ;	  	  
+					var newCell2 = newRow.insertCell(2);  newCell2.innerHTML = "<td>"+data.zhuanyenianji+"</td>" ;
+					var newCell2 = newRow.insertCell(3);  newCell2.innerHTML = "<td>"+data.shuben+"</td>" ;
+					if(data.earphone!=null)
+					{
+						var newCell2 = newRow.insertCell(4);  newCell2.innerHTML = "<td>"+data.earphone+"</td>" ;}
+					else{
+						var newCell2 = newRow.insertCell(4);  newCell2.innerHTML = "<td></td>" ;}
+					if(data.otherfee!=null)
+					{
+						var newCell2 = newRow.insertCell(5);  newCell2.innerHTML = "<td>"+data.otherfee+"</td>" ;}
+					else{
+						var newCell2 = newRow.insertCell(5);  newCell2.innerHTML = "<td></td>" ;}
+
+					var newCell2 = newRow.insertCell(6);  newCell2.innerHTML = "<td>"+data.heji+"</td>" ;
+					count = count+data.heji;
+					document.getElementById("countbutton").style.display = 'inline';
+		},
+		error:function(){
+			alert("信息有误，请确认信息后再次查询!");
+		}
+		});
+	}
+	function getall(){
+		var table=document.getElementById("tab");
+		var newRow=table.insertRow();
+		var newCell1 = newRow.insertCell(0);  newCell1.innerHTML = "<td>合计</td>" ; 
+		var newCell1 = newRow.insertCell(1);  newCell1.innerHTML = "<td></td>" ; 
+		var newCell1 = newRow.insertCell(2);  newCell1.innerHTML = "<td></td>" ; 
+		var newCell1 = newRow.insertCell(3);  newCell1.innerHTML = "<td></td>" ; 
+		var newCell1 = newRow.insertCell(4);  newCell1.innerHTML = "<td></td>" ; 
+		var newCell1 = newRow.insertCell(5);  newCell1.innerHTML = "<td></td>" ; 
+		var newCell2 = newRow.insertCell(6);  newCell2.innerHTML = "<td>"+count+"</td>" ;
+	}
+</script>
+<style>
+	.alt td{ background:black !important;}
+</style>
+</head>
+<body onload="getValue() " >
+	<form id="submitForm" name="submitForm" action="" method="post">
+		<input type="hidden" name="allIDCheck" value="" id="allIDCheck"/>
+		<input type="hidden" name="fangyuanEntity.fyXqName" value="" id="fyXqName"/>
+		<div id="container">
+			<div class="ui_content">
+				<div class="ui_text_indent">
+					<div id="box_border">
+						<div >
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui_content">
+				<div class="ui_tb">
+					<table class="table" cellspacing="0" cellpadding="0" width="100%" align="center" border="0" id="tab">
+						<tr>
+							<th>序号</th>
+							<th>学年</th>
+							<th>专业年级</th>
+							<th>书本费</th>
+							<th>耳机</th>
+							<th>其他</th>
+							<th>合计</th>
+						</tr>
+						
+					</table>
+					<div style="text-align: center;">
+						<select name="xuenian" id="xuenian" class="ui_select01" >
+						</select>
+						<select name="zhuanyenianji" id="zhuanyenianji" class="ui_select01"  >
+						</select>
+						<input id="submitbutton" type="button" value="查询" class="ui_input_btn01"/>	<input id="countbutton" type="button" value="合计" class="ui_input_btn01" style="display: none;"/>	
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</body>
+</html>

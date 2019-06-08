@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>信息管理系统</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="scripts/jquery/jquery-1.7.1.js"></script>
+<link href="style/authority/basic_layout.css" rel="stylesheet" type="text/css">
+<link href="style/authority/common_style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="scripts/authority/commonAll.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery-1.4.4.min.js"></script>
+<script src="scripts/My97DatePicker/WdatePicker.js" type="text/javascript" defer="defer"></script>
+<script type="text/javascript" src="scripts/artDialog/artDialog.js?skin=default"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		/*
+		 * 提交
+		 */
+		$("#submitbutton").click(function() {
+			if(validateForm()){
+				addinfo();
+			}
+		});
+		
+		/*
+		 * 取消
+		 */
+		$("#cancelbutton").click(function() {
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		});
+		
+		var result = 'null';
+		if(result =='success'){
+			/**  关闭弹出iframe  **/
+			window.parent.$.fancybox.close();
+		}
+	});
+		
+
+	/** 表单验证  **/
+	function validateForm(){
+		if($("#shuhao").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写书号', ok:true,});
+			return false;
+		}
+		if($("#jiaocaimingcheng").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写教材名称', ok:true,});
+			return false;
+		}
+		if($("#zuozhe").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写作者', ok:true,});
+			return false;
+		}
+		if($("#chubanshijian").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写出版时间', ok:true,});
+			return false;
+		}
+		if($("#jiaocaileibie").val()==""){
+			art.dialog({icon:'error', title:'友情提示', drag:false, resize:false, content:'请填写教材类别', ok:true,});
+			return false;
+		}
+		return true;
+	}
+	</script>
+	<script type="text/javascript">
+		
+			function addinfo(){
+			$.ajax({
+				type:'POST',
+				url:'http://localhost:8080/jcyd/add',
+				data:{"xuenian":document.getElementById("xuenian").value,
+					  "kechengmingcheng":document.getElementById("kechengmingcheng").value,
+					  "shuhao":document.getElementById("shuhao").value,
+					  "jiaocaimingcheng":document.getElementById("jiaocaimingcheng").value,
+					  "zuozhe":document.getElementById("zuozhe").value,
+					  "chubanshe":document.getElementById("chubanshe").value,
+					  "chubanshijian":document.getElementById("chubanshijian").value,
+					  "jiaocaileibie":document.getElementById("jiaocaileibie").value,
+					  "zhuanyenianji":document.getElementById("zhuanyenianji").value,
+					  "xueshengshu":document.getElementById("xueshengshu").value,
+					  "jiaoben":document.getElementById("jiaoben").value,
+					  "hejibenshu":document.getElementById("hejibenshu").value,
+					  "beizhu":document.getElementById("beizhu").value,
+					  "username":localStorage.getItem("username"),
+					  "academy":localStorage.getItem("academy")},
+				success:function(data){//返回json结果 
+					if(data){
+						alert("预定成功!");
+						window.parent.$.fancybox.close();
+					}
+					else{
+						alert("您填写的信息有误，请确认信息后再次填写！");
+					}
+					}	
+				});	
+		}
+	</script>
+	<script type="text/javascript">
+		function getValue(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/chubanshe',
+			data:{},
+			success:function(data){//返回json结果 
+				var i;
+				var obj=document.getElementById("xuenian");
+				for(i=0;i<data.length;i++){
+				obj.add(new Option(""+data[i].xuenian+"",""+data[i].xuenian+""));
+				}	
+			}
+			
+		});
+		getKecheng();
+	}
+	function getKecheng(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/kechengbiao',
+			data:{"academy":localStorage.getItem("academy")},
+			success:function(data){//返回json结果 
+				var i;
+				var obj=document.getElementById("kechengmingcheng");
+				for(i=0;i<data.length;i++){
+				obj.add(new Option(""+data[i].kechengmingcheng+"",""+data[i].kechengmingcheng+""));
+				}
+			}  
+		});
+		 getZhuanyenianji();
+	}
+	function getZhuanyenianji(){
+		$.ajax({
+			type:'POST',
+			url:'http://localhost:8080/zhuanyenianji',
+			data:{"academy":localStorage.getItem("academy")},
+			success:function(data){//返回json结果 
+				var i;
+				var obj=document.getElementById("zhuanyenianji");
+				for(i=0;i<data.length;i++){
+				obj.add(new Option(""+data[i].zhuanyenianji+"",""+data[i].zhuanyenianji+""));
+				}
+			}  
+		});
+	}
+	</script>
+	<script type="text/javascript">
+		function count(){
+			document.getElementById("hejibenshu").value=Number(document.getElementById("xueshengshu").value)+Number(document.getElementById("jiaoben").value);
+		}
+		function getchubanshe(){
+				$.ajax({
+				type:'POST',
+				url:'http://localhost:8080/chubanshe/xuenian',
+				data:{"xuenian":document.getElementById('xuenian').value},
+				success:function(data){//返回json结果 
+					var i;
+					var obj=document.getElementById("chubanshe");
+					obj.options.length=0;
+					for(i=0;i<data.length;i++){
+					obj.add(new Option(""+data[i].chubanshe+"",""+data[i].chubanshe+""));
+					}	
+				}
+				
+			});
+			
+		}
+	</script>
+
+
+</head>
+<body  onload="getValue()">
+<form id="submitForm" name="submitForm" action="#" method="post">
+	<div id="container">
+		<div id="nav_links">
+			当前位置：基础数据&nbsp;>&nbsp;<span style="color: #1A5CC6;">预定教材</span>
+			<div id="page_close">
+				<a href="javascript:parent.$.fancybox.close();">
+					<img src="images/common/page_close.png" width="20" height="20" style="vertical-align: text-top;"/>
+				</a>
+			</div>
+		</div>
+		<div class="ui_content">
+			<table  cellspacing="0" cellpadding="0" width="100%" align="left" border="0">
+				<tr>
+					<td class="ui_text_rt" width="80">学年</td>
+					<td class="ui_text_lt">
+						<select name="xuenian" id="xuenian" class="ui_select01" onchange="getchubanshe()">
+						<option ></option>
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">课程名称</td>
+					<td>
+						<select name="kechengmingcheng" id="kechengmingcheng"   class="ui_select01">
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">书号(ISBN)</td>
+					<td><input type="text"  name="shuhao"  id="shuhao"   class="ui_input_txt02" placeholder="必填"/></td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">教材名称</td>
+					<td><input type="text"  name="jiaocaimingcheng"  id="jiaocaimingcheng" class="ui_input_txt02" placeholder="必填"/></td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">作者</td>
+					<td><input type="text"  name="zuozhe"  id="zuozhe" class="ui_input_txt02" placeholder="必填"/></td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">出版社</td>
+					<td class="ui_text_lt">
+						<select name="chubanshe" id="chubanshe"  name="chubanshe"  class="ui_select01">
+                        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt" >出版时间</td>
+					<td class="ui_text_lt">
+						<input type="text" id="chubanshijian" name="chubanshijian" class="ui_input_txt02" placeholder="必填"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">教材类别</td>
+					<td class="ui_text_lt">
+						<input type="text" id="jiaocaileibie" name="jiaocaileibie"  class="ui_input_txt02" placeholder="必填"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">专业年级</td>
+					<td class="ui_text_lt">
+						<select name="chubanshe" id="zhuanyenianji"   name="zhuanyenianji"  class="ui_select01">
+				        </select>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">学生数</td>
+					<td class="ui_text_lt">
+						<input type="text" id="xueshengshu"  name="xueshengshu" class="ui_input_txt02" placeholder="教师不可填写"  disabled/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">教本</td>
+					<td class="ui_text_lt">
+						<input type="text" id="jiaoben" name="jiaoben" placeholder="教师不可填写"  class="ui_input_txt02" disabled/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">合计本数</td>
+					<td class="ui_text_lt">
+						<input type="text" id="hejibenshu" name="hejibenshu"  class="ui_input_txt02" placeholder="教师不可填写"     disabled/>
+					</td>
+				</tr>
+				<tr>
+					<td class="ui_text_rt">备注</td>
+					<td class="ui_text_lt">
+						<input type="text" id="beizhu"  name="beizhu" class="ui_input_txt03" placeholder="若有补充,在此填写"/>
+					</td>
+				</tr>
+				<tr>
+					<td>&nbsp;</td>
+					<td class="ui_text_lt">
+						&nbsp;<input id="submitbutton" type="button" value="提交" class="ui_input_btn01"/>					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</form>
+
+</body>
+</html>

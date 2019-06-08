@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.ChubansheMapper">
+    <resultMap id="BaseResultMap" type="com.example.demo.entity.Chubanshe">
+        <id column="id" jdbcType="INTEGER" property="id"></id>
+        <result column="xuenian" jdbcType="VARCHAR" property="xuenian" />
+        <result column="baoming" jdbcType="VARCHAR" property="baoming" />
+        <result column="chubanshe" jdbcType="VARCHAR" property="chubanshe" />
+        <result column="zhekou" jdbcType="DECIMAL" property="zhekou" />
+    </resultMap>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select distinct xuenian  from chubanshe
+    </select>
+    <select id="selectAll1" resultMap="BaseResultMap">
+        select * from chubanshe
+    </select>
+    <select id="selectByXuenian" resultMap="BaseResultMap">
+        select *  from chubanshe where xuenian=#{xuenian}
+    </select>
+    <select id="selectZheKou" resultMap="BaseResultMap" >
+        select *  from chubanshe
+        WHERE xuenian=#{xuenian,jdbcType=VARCHAR} AND chubanshe=#{chubanshe,jdbcType=VARCHAR}
+    </select>
+    <select id="selectByAll" resultMap="BaseResultMap" >
+        select *  from chubanshe
+        WHERE xuenian=#{xuenian} and baoming=#{baoming} and chubanshe=#{chubanshe}
+    </select>
+    <select id="selectById" resultMap="BaseResultMap" >
+        select *  from chubanshe
+        WHERE id=#{id}
+    </select>
+    <insert id="insert">
+        insert into chubanshe(xuenian,baoming,chubanshe,zhekou) values (#{xuenian},#{baoming},#{chubanshe},#{zhekou})
+    </insert>
+    <delete id="deleteById">
+        DELETE from chubanshe where id=#{id}
+    </delete>
+    <update id="updateById">
+        update  chubanshe set xuenian=#{xuenian},baoming=#{baoming},chubanshe=#{chubanshe},zhekou=#{zhekou} where id=#{id}
+    </update>
+</mapper>
